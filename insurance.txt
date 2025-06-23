@@ -1,0 +1,63 @@
+Use Case Analysis
+Use Case:
+
+A ProjectTemplate has a name and is associated with one or more Property. A Property can be one of the following types:
+A set of string options.
+A set of numeric options.
+A boolean true or false.
+A range or numeric value (e.g., 1-100).
+A Project has a name and is associated with a ProjectTemplate.
+A Commodity has a name, initial_fee, and annual_fee, and can be associated with multiple Projects.
+Business users first register a ProjectTemplate by giving it a name and then associating multiple Properties to it. They will define the property type for each Property and set the valid options and ranges.
+Business users then define a Project and associate it with a ProjectTemplate. As part of this association, business users select a value from the options for each Property of the ProjectTemplate.
+Business users then define a Commodity and associate it to one or more Projects.
+After initial creation of a Commodity, any subsequent updates and changes to it are versioned and available using a version number, i.e., Commodity table has to support versioning.
+After initial creation of a Commodity, any subsequent updates and changes to it need to be tracked and recorded with a timestamp.
+A Customer entity exists and has an id.
+An Account entity exists and has an id.
+A Customer can have multiple Accounts.
+A Customer can have multiple Commodities and is associated with a specific version of the Commodity.
+An Account can have multiple Commodities and is associated with a specific version of the Commodity.
+A Commodity can be in multiple states. When it’s first created, it is in INITIALIZE stage, then it can move to LAUNCH_READY state.
+Projects can be associated with one or more Action. An Action has name and description. An Action is associated with one or more Workflow. A Workflow has a name and description.
+An inbound Event can trigger one or more Actions, so an Event to Action mapping is required.
+Experiments can only be performed after the LAUNCH_READY state.
+Experimentation needs to be enabled at the Commodity level only - no other entities need experimentation support.
+Breakdown:
+
+Actors: Business users (non-technical).
+Actions:
+Register a ProjectTemplate and define its Properties.
+Create a Project, associate it with a ProjectTemplate, and select Property values.
+Create a Commodity with name, initial_fee, annual_fee, and associate it with Projects.
+Version Commodities and track updates with timestamps.
+Manage Customers and Accounts.
+Associate Customers and Accounts with specific Commodity versions.
+Transition Commodities through states (INITIALIZE → LAUNCH_READY).
+Associate Projects with Actions, and Actions with Workflows.
+Map inbound Events to Actions to trigger them.
+Conduct experiments on Commodities in LAUNCH_READY state.
+Data:
+ProjectTemplate: Name, linked to Properties.
+Property: Type (string options, numeric options, boolean, range numeric), options/ranges.
+Project: Name, linked to ProjectTemplate with selected Property values.
+Commodity: Name, initial_fee, annual_fee, state, versioned.
+CommodityUpdate: Tracks Commodity changes with version and timestamp.
+Customer: Identified by id.
+Account: Identified by id.
+Action: Name, description, linked to Projects and Workflows.
+Workflow: Name, description, linked to Actions.
+Event: Triggers Actions.
+EventActionMapping: Maps Events to Actions.
+Relationships:
+One ProjectTemplate has many Properties.
+One Property belongs to one ProjectTemplate.
+One Project is associated with one ProjectTemplate.
+One Commodity is associated with many Projects, and one Project can be associated with many Commodities (many-to-many via ProjectCommodity).
+One Commodity has many CommodityUpdates.
+One Customer has many Accounts (one-to-many).
+One Customer has many Commodities, and one Commodity can be linked to many Customers (many-to-many via CustomerCommodity, referencing Commodity version).
+One Account has many Commodities, and one Commodity can be linked to many Accounts (many-to-many via AccountCommodity, referencing Commodity version).
+One Project has many Actions (many-to-many via ProjectAction).
+One Action has many Workflows (many-to-many via ActionWorkflow).
+One Event triggers many Actions, and one Action can be triggered by many Events (many-to-many via EventActionMapping).
