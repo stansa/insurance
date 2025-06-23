@@ -1,0 +1,100 @@
+@startuml
+!define RECTANGLE class
+
+' Entities and Attributes
+RECTANGLE ProjectTemplate {
+  +id: string <<PK>>
+  +name: string
+  +environment: string
+  +createdAt: string
+}
+
+RECTANGLE Property {
+  +id: string <<PK>>
+  +projectTemplateId: string <<FK>>
+  +name: string
+  +propertyType: string
+  +options: list
+  +rangeMin: number
+  +rangeMax: number
+  +booleanValue: boolean
+  +environment: string
+}
+
+RECTANGLE Project {
+  +id: string <<PK>>
+  +name: string
+  +projectTemplateId: string <<FK>>
+  +selectedProperties: map
+  +environment: string
+  +createdAt: string
+}
+
+RECTANGLE Commodity {
+  +id: string <<PK>>
+  +name: string
+  +initialFee: number
+  +annualFee: number
+  +environment: string
+  +createdAt: string
+  +updatedAt: string
+}
+
+RECTANGLE CommodityUpdate {
+  +id: string <<PK>>
+  +commodityId: string <<FK>>
+  +changes: map
+  +timestamp: string
+  +environment: string
+}
+
+RECTANGLE Customer {
+  +id: string <<PK>>
+  +environment: string
+  +createdAt: string
+}
+
+RECTANGLE Account {
+  +id: string <<PK>>
+  +customerId: string <<FK>>
+  +environment: string
+  +createdAt: string
+}
+
+RECTANGLE ProjectCommodity {
+  +id: string <<PK>>
+  +projectId: string <<FK>>
+  +commodityId: string <<FK>>
+  +environment: string
+  +createdAt: string
+}
+
+RECTANGLE CustomerCommodity {
+  +id: string <<PK>>
+  +customerId: string <<FK>>
+  +commodityId: string <<FK>>
+  +environment: string
+  +createdAt: string
+}
+
+RECTANGLE AccountCommodity {
+  +id: string <<PK>>
+  +accountId: string <<FK>>
+  +commodityId: string <<FK>>
+  +environment: string
+  +createdAt: string
+}
+
+' Relationships
+ProjectTemplate ||--o{ Property : has
+ProjectTemplate ||--o{ Project : has
+Project ||--o{ ProjectCommodity : links
+Commodity ||--o{ ProjectCommodity : links
+Commodity ||--o{ CommodityUpdate : has
+Customer ||--o{ Account : has
+Customer ||--o{ CustomerCommodity : links
+Commodity ||--o{ CustomerCommodity : links
+Account ||--o{ AccountCommodity : links
+Commodity ||--o{ AccountCommodity : links
+
+@enduml
